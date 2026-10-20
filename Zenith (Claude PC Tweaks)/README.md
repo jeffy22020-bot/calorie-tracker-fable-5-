@@ -34,20 +34,44 @@ remover, disk cleaner, games library with one-click Game Boost, and a system-fil
 
 ## Download and start
 
-1. Download this folder:
-   - **Easiest:** download [`Zenith-v1.0.zip`](Zenith-v1.0.zip) from this folder (open it on GitHub, then click the download button), **or**
-   - on the repository page click **Code → Download ZIP** and use the `Zenith (Claude PC Tweaks)` folder inside.
+### Option 1: one-line install (easiest)
+
+On your PC, click **Start**, type **PowerShell**, open **Windows PowerShell**, paste this line and press Enter:
+
+```powershell
+irm https://raw.githubusercontent.com/jeffy22020-bot/calorie-tracker-fable-5-/HEAD/install.ps1 | iex
+```
+
+Or press **Win + R**, paste this and press Enter:
+
+```
+powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/jeffy22020-bot/calorie-tracker-fable-5-/HEAD/install.ps1 | iex"
+```
+
+The installer then asks you three things (press Enter to accept each default):
+
+1. **Install folder:** `C:\Users\<you>\Zenith (Claude PC Tweaks)` by default.
+2. **Create desktop and Start menu shortcuts?** `[Y/n]`
+3. **Start Zenith now?** `[Y/n]` Windows then asks *"Do you want to allow this app to make changes?"* Choose **Yes**,
+   because Zenith needs administrator rights to change system settings.
+
+It checks that the download is complete and unmodified (SHA-256 checksum) before installing. It needs no
+administrator rights and changes nothing else on your PC. To update later, run the same line again. Your backup and
+settings are kept. You can read the installer first: [`install.ps1`](install.ps1).
+
+### Option 2: download the ZIP
+
+1. Download [`Zenith-v1.0.zip`](Zenith-v1.0.zip) from this folder (open it on GitHub, then click the download button).
 2. Right-click the zip → **Extract All…** (for example to your Desktop or `C:\Zenith`).
-3. Open the extracted folder and double-click **`Launch Zenith.bat`**.
-4. Windows asks *"Do you want to allow this app to make changes?"* → **Yes**. Zenith needs administrator rights to change system settings.
-5. The Zenith window opens. Optional: **Settings → Desktop shortcut** adds a Zenith icon to your desktop.
+3. Open the extracted folder and double-click **`Launch Zenith.bat`**, then choose **Yes** when Windows asks.
+4. Optional: **Settings → Desktop shortcut** in Zenith adds a desktop icon.
 
 If Windows SmartScreen shows *"Windows protected your PC"*, click **More info → Run anyway**. That warning
-appears for any downloaded script that is not signed. Zenith has no installer and no .exe: it is plain
-PowerShell and HTML that you can open in Notepad and read.
+appears for any downloaded script that is not signed. Zenith has no .exe: it is plain PowerShell and HTML that you
+can open in Notepad and read.
 
 **Requirements:** Windows 10 or 11 (64-bit). Uses the built-in Windows PowerShell 5.1 and opens in a Microsoft Edge
-app window (Chrome or your default browser if Edge is missing). Nothing is installed and nothing runs at startup.
+app window (Chrome or your default browser if Edge is missing). Nothing runs at startup.
 
 ---
 
@@ -135,6 +159,7 @@ disables the page file or CPU power states · runs a "registry cleaner" · delet
 
 ```
 Zenith (Claude PC Tweaks)/
+  install.ps1              one-line installer (downloads the ZIP below, checks it, installs)
   Launch Zenith.bat        start Zenith
   Emergency Restore.bat    undo everything without opening the app
   Zenith-v1.0.zip          this folder as a single download
