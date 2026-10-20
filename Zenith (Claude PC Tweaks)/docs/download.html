@@ -1,0 +1,245 @@
+<title>Get Zenith</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  /* Layout: one centred column. The PowerShell window with the install line is the hero,
+     then the three real steps, a preview of what the installer prints, other ways, safety. */
+  :root {
+    --bg: #090d18;
+    --panel: #111829;
+    --raise: #172036;
+    --line: #232f4b;
+    --fg: #e8ecf6;
+    --muted: #8f9ab3;
+    --accent: #ff8a1f;
+    --accent-2: #ffc24d;
+    --ok: #4ade80;
+    --term: #060912;
+    --term-fg: #d7deee;
+    --ps-blue: #012456;
+    --display: "Chakra Petch", "Segoe UI", system-ui, sans-serif;
+    --body: "Instrument Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: radial-gradient(900px 480px at 50% -120px, rgba(255, 138, 31, .14), transparent 70%), var(--bg);
+    color: var(--fg);
+    font: 16px/1.55 var(--body);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 40px 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+  h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; letter-spacing: .01em; }
+  p { margin: 0; }
+  a { color: var(--accent-2); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+  code, kbd { font-family: var(--mono); font-size: .92em; }
+  kbd { background: var(--raise); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; padding: 1px 6px; color: var(--fg); }
+
+  /* brand + hero */
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand svg { width: 40px; height: 40px; flex: none; }
+  .brand b { font-family: var(--display); font-size: 20px; letter-spacing: .22em; }
+  .brand span { display: block; color: var(--muted); font-size: 13px; letter-spacing: .02em; }
+  .hero { display: flex; flex-direction: column; gap: 22px; }
+  .hero h1 { font-size: clamp(34px, 6vw, 54px); line-height: 1.05; font-weight: 700; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .lead { color: var(--muted); font-size: 18px; max-width: 60ch; }
+
+  /* PowerShell window */
+  .win { border: 1px solid #2c3a5c; border-radius: 10px; overflow: hidden; background: var(--term); box-shadow: 0 24px 60px rgba(0, 0, 0, .45); }
+  .win-bar { display: flex; align-items: center; gap: 10px; background: #1b2235; padding: 8px 12px; font-size: 13px; color: var(--muted); }
+  .win-bar .ps { width: 16px; height: 16px; border-radius: 3px; background: var(--ps-blue); color: #fff; font: 700 10px/16px var(--mono); text-align: center; flex: none; }
+  .win-bar .ctl { margin-left: auto; letter-spacing: 14px; font-family: var(--mono); opacity: .7; }
+  .win-body { padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 14px; }
+  .cmdline { display: flex; gap: 14px; align-items: flex-start; }
+  .cmd { flex: 1; min-width: 0; font: 15px/1.6 var(--mono); color: var(--term-fg); overflow-wrap: anywhere; }
+  .cmd .prompt { color: #7f8bab; }
+  .cmd .kw { color: var(--accent-2); }
+  .copy {
+    flex: none; display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 8px; cursor: pointer;
+    background: linear-gradient(135deg, #ff7a18, #ffb547); color: #1d0f00; font: 600 14px var(--body); padding: 9px 16px;
+    box-shadow: 0 6px 18px rgba(255, 128, 31, .25);
+  }
+  .copy.ghost { background: var(--raise); color: var(--fg); box-shadow: none; border: 1px solid var(--line); }
+  .copy svg { width: 16px; height: 16px; }
+  .note { color: var(--muted); font-size: 14px; }
+  .alt { display: flex; flex-direction: column; gap: 10px; }
+  .alt .label { font-size: 13px; color: var(--muted); }
+  .alt .box { display: flex; gap: 12px; align-items: flex-start; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .alt .cmd { font-size: 13px; }
+
+  /* steps */
+  section { display: flex; flex-direction: column; gap: 18px; }
+  section > h2 { font-size: 26px; }
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; counter-reset: s; }
+  .steps li { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 8px; counter-increment: s; min-width: 0; }
+  .steps li::before { content: counter(s); font: 700 15px/30px var(--display); width: 30px; height: 30px; text-align: center; border-radius: 50%; background: rgba(255, 138, 31, .15); color: var(--accent-2); }
+  .steps h3 { font-size: 18px; }
+  .steps p { color: var(--muted); font-size: 15px; }
+
+  /* transcript */
+  .transcript { margin: 0; padding: 18px; font: 13.5px/1.7 var(--mono); color: var(--term-fg); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .transcript .y { color: var(--accent-2); }
+  .transcript .d { color: #6c7899; }
+  .transcript .g { color: var(--ok); }
+  .transcript .u { color: #fff; }
+
+  /* other ways */
+  .ways { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; border-radius: 10px; padding: 12px 18px; font-weight: 600; border: 1px solid var(--line); background: var(--raise); color: var(--fg); }
+  .btn:hover { border-color: #3b4c75; }
+  .btn.primary { background: linear-gradient(135deg, #ff7a18, #ffb547); border-color: transparent; color: #1d0f00; }
+  .btn small { font-weight: 500; opacity: .75; }
+  .btn svg { width: 18px; height: 18px; }
+
+  /* safety */
+  .safety { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .safety div { border-top: 2px solid var(--accent); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .safety h3 { font-size: 17px; }
+  .safety p { color: var(--muted); font-size: 15px; }
+
+  .specs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .specs span { font: 13px var(--mono); color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; background: var(--panel); }
+  footer { color: var(--muted); font-size: 13px; display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--line); padding-top: 20px; }
+  footer code { color: #b9c3da; overflow-wrap: anywhere; }
+
+  @media (max-width: 720px) {
+    .steps, .safety { grid-template-columns: 1fr; }
+    .cmdline, .alt .box { flex-direction: column; }
+    .lead { font-size: 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="brand" aria-label="Zenith">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="zg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#FF5F1F"/><stop offset="1" stop-color="#FFC24D"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="#131B2E"/><path d="M9 47 L32 12 L55 47 H44.5 L32 28 L19.5 47 Z" fill="url(#zg)"/><path d="M25.5 47 L32 37.5 L38.5 47 Z" fill="url(#zg)" opacity="0.55"/><circle cx="47" cy="15" r="3" fill="#FFC24D"/></svg>
+    <div><b>ZENITH</b><span>Claude PC Tweaks &middot; v1.0.0 for Windows 10 / 11</span></div>
+  </header>
+
+  <div class="hero">
+    <h1>Install Zenith with <em>one line</em> of PowerShell</h1>
+    <p class="lead">Paste this on your PC. It downloads Zenith, checks the download, and asks you three quick questions. No ZIP to unpack, no admin rights for the install.</p>
+
+    <div class="win" role="group" aria-label="Install command for Windows PowerShell">
+      <div class="win-bar"><span class="ps">&gt;_</span>Windows PowerShell<span class="ctl" aria-hidden="true">&#8211;&#9633;&#215;</span></div>
+      <div class="win-body">
+        <div class="cmdline">
+          <div class="cmd"><span class="prompt">PS C:\Users\you&gt; </span><span id="cmd-ps"><span class="kw">irm</span> https://raw.githubusercontent.com/jeffy22020-bot/calorie-tracker-fable-5-/HEAD/install.ps1 | <span class="kw">iex</span></span></div>
+          <button class="copy" type="button" data-copy="cmd-ps" id="copy-ps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>Copy</span></button>
+        </div>
+        <p class="note">Open it from <b>Start</b>: type <kbd>PowerShell</kbd>, open <b>Windows PowerShell</b>, right-click to paste, then press <kbd>Enter</kbd>.</p>
+      </div>
+    </div>
+
+    <div class="alt">
+      <span class="label">Prefer the Run box? Press <kbd>Win</kbd> + <kbd>R</kbd>, paste this, press <kbd>Enter</kbd>:</span>
+      <div class="box">
+        <div class="cmd" id="cmd-run">powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/jeffy22020-bot/calorie-tracker-fable-5-/HEAD/install.ps1 | iex"</div>
+        <button class="copy ghost" type="button" data-copy="cmd-run" id="copy-run"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>Copy</span></button>
+      </div>
+    </div>
+  </div>
+
+  <section aria-labelledby="h-steps">
+    <h2 id="h-steps">What happens</h2>
+    <ol class="steps">
+      <li><h3>Paste the line</h3><p>Zenith downloads (about 140 KB) and its SHA-256 checksum is checked, so a broken or altered download is never installed.</p></li>
+      <li><h3>Answer three prompts</h3><p>Install folder, desktop and Start menu shortcuts, start now. Pressing <kbd>Enter</kbd> accepts each default.</p></li>
+      <li><h3>Choose Yes</h3><p>Windows asks "Do you want to allow this app to make changes?". Zenith needs that to change system settings. Its window then opens.</p></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="h-preview">
+    <h2 id="h-preview">What you'll see</h2>
+    <div class="win">
+      <div class="win-bar"><span class="ps">&gt;_</span>Windows PowerShell<span class="ctl" aria-hidden="true">&#8211;&#9633;&#215;</span></div>
+<pre class="transcript"><span class="y">  ZENITH  -  PC Tweaks installer</span>
+<span class="d">  version 1.0.0  |  peak performance for your rig</span>
+<span class="d">  ---------------------------------------------</span>
+  Install folder: C:\Users\you\Zenith (Claude PC Tweaks)
+  Press Enter to use it, or type another folder: <span class="u">&#9166;</span>
+  Downloading Zenith...
+<span class="g">  Downloaded 138 KB - checksum verified.</span>
+  Installing...
+<span class="g">  Installed to C:\Users\you\Zenith (Claude PC Tweaks)</span>
+  Create desktop and Start menu shortcuts? [Y/n] <span class="u">Y</span>
+<span class="g">  Shortcuts created: Desktop and Start menu ("Zenith").</span>
+
+  Before Zenith changes anything it creates a Windows restore point, and every change
+  can be undone with the "Restore Original" button or Emergency Restore.bat.
+  Start Zenith now? [Y/n] <span class="u">Y</span>
+<span class="g">  Starting Zenith - choose Yes when Windows asks for permission.</span></pre>
+    </div>
+    <p class="note">Already installed? Run the same line again to update. Your backup, settings and restore history stay in <code>C:\ProgramData\Zenith</code>.</p>
+  </section>
+
+  <section aria-labelledby="h-ways">
+    <h2 id="h-ways">Other ways to get it</h2>
+    <div class="ways">
+      <a class="btn primary" href="https://raw.githubusercontent.com/jeffy22020-bot/calorie-tracker-fable-5-/HEAD/Zenith%20(Claude%20PC%20Tweaks)/Zenith-v1.0.zip" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>Download ZIP <small>138 KB</small></a>
+      <a class="btn" href="https://github.com/jeffy22020-bot/calorie-tracker-fable-5-/tree/HEAD/Zenith%20(Claude%20PC%20Tweaks)" target="_blank" rel="noopener">Open the folder on GitHub</a>
+      <a class="btn" href="https://github.com/jeffy22020-bot/calorie-tracker-fable-5-/blob/HEAD/Zenith%20(Claude%20PC%20Tweaks)/install.ps1" target="_blank" rel="noopener">Read the installer first</a>
+    </div>
+    <p class="note">With the ZIP: right-click it, choose <b>Extract All</b>, open the folder and double-click <code>Launch Zenith.bat</code>. If SmartScreen says "Windows protected your PC", choose <b>More info &rarr; Run anyway</b>: Zenith is plain, readable PowerShell with no .exe.</p>
+  </section>
+
+  <section aria-labelledby="h-safe">
+    <h2 id="h-safe">Every change can be undone</h2>
+    <div class="safety">
+      <div><h3>Restore Original</h3><p>One button in Zenith puts every setting back exactly as it was. The originals are saved before anything changes.</p></div>
+      <div><h3>Windows restore point</h3><p>Created automatically before the first change of every session, for a full system rollback.</p></div>
+      <div><h3>Emergency Restore.bat</h3><p>In the Zenith folder. Undoes everything from a console window, even if the app will not open.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-spec">
+    <h2 id="h-spec">Tuned for this PC</h2>
+    <div class="specs"><span>AMD Ryzen 7 5800X</span><span>RTX 3070 8 GB</span><span>64 GB DDR4-2400</span><span>2.29 TB storage</span><span>ROG STRIX G15DK</span><span>Windows 11 Home 25H2</span></div>
+    <p class="note">Tip from Zenith's scanner: your RAM runs at 2400 MT/s. Enabling D.O.C.P. in the BIOS is often the biggest single FPS gain on Ryzen 5000. Zenith walks you through it.</p>
+  </section>
+
+  <footer>
+    <span>Zenith 1.0.0 &middot; Claude PC Tweaks &middot; installs to your user folder, needs Windows 10 or 11 (64-bit)</span>
+    <span>ZIP SHA-256: <code>4e0f1a9cefbb92e30481e6346262290ed98fdbc3497bfbc5de4225a917bca1ea</code></span>
+  </footer>
+</div>
+
+<script>
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var src = document.getElementById(btn.getAttribute('data-copy'));
+      var text = src.textContent.trim();
+      var label = btn.querySelector('span');
+      function show(msg) {
+        label.textContent = msg;
+        clearTimeout(btn._t);
+        btn._t = setTimeout(function () { label.textContent = 'Copy'; }, 2200);
+      }
+      function selectIt() {
+        var r = document.createRange();
+        r.selectNodeContents(src);
+        var s = window.getSelection();
+        s.removeAllRanges();
+        s.addRange(r);
+        show('Press Ctrl+C');
+      }
+      try {
+        navigator.clipboard.writeText(text).then(function () { show('Copied'); }, selectIt);
+      } catch (e) { selectIt(); }
+    });
+  });
+</script>
