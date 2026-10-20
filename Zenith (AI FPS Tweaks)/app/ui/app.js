@@ -847,7 +847,7 @@
           <div class="lrow" style="padding:11px 0"><div class="body"><h4>Restart PC</h4><div class="sub">Some tweaks only take effect after a restart.</div></div><button class="btn btn-sm" data-action="reboot">Restart</button></div>
         </div></div>
     </div>
-    <div class="card" style="margin-top:18px"><div class="card-title"><h2>${icon('info')} About Zenith</h2><span class="muted small">v${esc(s.version)} &middot; Claude PC Tweaks</span></div>
+    <div class="card" style="margin-top:18px"><div class="card-title"><h2>${icon('info')} About Zenith</h2><span class="muted small">v${esc(s.version)} &middot; AI FPS Tweaks</span></div>
       <p class="muted">Zenith is a transparent, open optimizer: every tweak shows exactly which setting it changes, saves the original first, and can be undone. Built and tuned for an AMD Ryzen 7 5800X, NVIDIA RTX 3070 and 64 GB DDR4 gaming PC on Windows 11.</p>
       <p style="margin-top:12px"><b>Zenith never:</b></p>
       <ul class="tips" style="margin-top:6px"><li>turns off Windows Defender, Windows Update, the firewall or UAC</li><li>removes the Microsoft Store, Edge, Xbox sign-in or any system component</li>

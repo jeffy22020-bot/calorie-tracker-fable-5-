@@ -1,11 +1,7 @@
-# Zenith (Claude PC Tweaks)
+# Zenith (AI FPS Tweaks)
 
 A Hone-style FPS and latency optimizer for Windows gaming PCs: PC scanner, 73 reversible tweaks, Windows debloat, startup manager, cleaner, Game Boost, and one-click **Restore Original**.
 
-**Install on your PC:** open **Windows PowerShell**, paste this line and press Enter:
+**Install:** download `Zenith-v1.0.zip` (from your Zenith download page on claude.ai, or from this private repo while signed in), extract it, and double-click **`Install Zenith.bat`**. Zenith goes to **Documents → Zenith (AI FPS Tweaks)**.
 
-```powershell
-irm https://raw.githubusercontent.com/jeffy22020-bot/calorie-tracker-fable-5-/HEAD/install.ps1 | iex
-```
-
-Everything else, including the ZIP download, screenshots and the full tweak list, is in [`Zenith (Claude PC Tweaks)/`](Zenith%20(Claude%20PC%20Tweaks)/README.md).
+Everything else, including screenshots and the full tweak list, is in [`Zenith (AI FPS Tweaks)/`](Zenith%20(AI%20FPS%20Tweaks)/README.md).

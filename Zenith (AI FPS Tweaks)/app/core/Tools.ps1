@@ -596,7 +596,7 @@ function New-ZDesktopShortcut {
     $sh.Arguments = ('-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "{0}"' -f $script)
     $sh.WorkingDirectory = $Global:ZCtx.AppRoot
     $sh.IconLocation = (Join-Path $Global:ZCtx.AppRoot 'ui\zenith.ico') + ',0'
-    $sh.Description = 'Zenith - PC optimizer (Claude PC Tweaks)'
+    $sh.Description = 'Zenith - PC optimizer (AI FPS Tweaks)'
     $sh.WindowStyle = 7
     $sh.Save()
     return $lnkPath

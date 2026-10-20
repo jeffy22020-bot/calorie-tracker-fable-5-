@@ -1,5 +1,5 @@
 <#
-    Zenith - PC optimizer (Claude PC Tweaks)
+    Zenith - PC optimizer (AI FPS Tweaks)
 
     Start it by double-clicking "Launch Zenith.bat" in the folder above this one.
 
